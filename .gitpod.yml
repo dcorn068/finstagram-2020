@@ -2,3 +2,5 @@ vscode:
   extensions:
     - ritwickdey.LiveServer@5.6.1:wV4LBkq6Z5s1xwf2HrB+cw==
     - esbenp.prettier-vscode@3.20.0:37/f4uBlE287wUjENFq1aA==
+    - jnbt.vscode-rufo@0.0.1:/hKnkaGZjJr3CRurgh7IKQ==
+    - mbessey.vscode-rufo@0.2.1:xZ7a32aRBqM1kZPQLPK6Vw==
