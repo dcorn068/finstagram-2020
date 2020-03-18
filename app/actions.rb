@@ -10,60 +10,28 @@ end
 #     File.read('app/views/index.html')
 # end
 
+# the "/" route
+
+###################
+#### HOMEPAGE #####
+###################
+
 get '/' do
-
-  @finstagram_post_shark = {
-    username: "sharky_j",
-    avatar_url: "http://naserca.com/images/sharky_j.jpg",
-    photo_url: "http://naserca.com/images/shark.jpg",
-    humanized_time_ago: get_humanized_time_ago(15),
-    like_count: 0,
-    comment_count: 1,
-    comments: [{
-      username: "sharky_j",
-      text: "Out for the long weekend... too embarrassed to show y'all the beach bod!"
-    }]
-  }
-
-  @finstagram_post_whale = {
-    username: "kirk_whalum",
-    avatar_url: "http://naserca.com/images/kirk_whalum.jpg",
-    photo_url: "http://naserca.com/images/whale.jpg",
-    humanized_time_ago: get_humanized_time_ago(65),
-    like_count: 0,
-    comment_count: 1,
-    comments: [{
-      username: "kirk_whalum",
-      text: "#weekendvibes"
-    }]
-  }
-
-  @finstagram_post_marlin = {
-    username: "marlin_peppa",
-    avatar_url: "http://naserca.com/images/marlin_peppa.jpg",
-    photo_url: "http://naserca.com/images/marlin.jpg",
-    humanized_time_ago: get_humanized_time_ago(190),
-    like_count: 0,
-    comment_count: 1,
-    comments: [{
-      username: "marlin_peppa",
-      text: "lunchtime! ;)"
-    }]
-  }
-
-  #  my_variable is a normal variable, only accessible inside this code block
-  # @my_variable is an INSTANCE variable, accessible inside any .erb file we render
-  # -> "@" is like "pipe into .erb file"
-  @finstagram_posts = [@finstagram_post_shark, @finstagram_post_whale, @finstagram_post_marlin]
-
 #   render the .erb file in /views named "index.erb"
-    erb(:index)
+  @finstagram_posts = FinstagramPost.order(created_at: :desc)
 
-    # final step: DRY the code https://web-pt.compass.lighthouselabs.ca/days/w3d1/activities/85
+    erb(:index)
 
 end
 
 # next code group here https://web-pt.compass.lighthouselabs.ca/activities/35
+
+# listen for a post request
+post "/fizzbuss" do
+    # validate a new user
+    # (sent to us by an HTML form)
+    # save the user if valid
+end
 
 get "/fizzbuzz" do 
     my_string = ""
@@ -92,3 +60,95 @@ get "/fizzbuzz" do
     
     return my_string
 end
+
+get "/yellow" do 
+    # Write a method that accepts a 10-character string of letters and outputs a corresponding phone number string. If the input letter string isn't 10 characters, you should return false (indicating that the input is not valid).
+
+    # Write a method that accepts a 10-character string of letters
+    
+    my_old_string = "hellohello"
+    
+    return_string = get_phone_text(my_old_string)
+
+    return return_string
+end
+
+# def get_phone_text(string_of_10_chars, arg2, arg3, parameter4)
+# our method only takes one argument
+    def get_phone_text(string_of_10_chars)
+
+        # the output string, starts empty, we'll add to it before returning it
+        returned_string_to_build = ""
+
+        # If the input letter string isn't 10 characters in length return false
+        is_string_10_chars_long = string_of_10_chars.length == 10
+
+        if (!is_string_10_chars_long)
+            return false
+        end
+        
+        # outputs a corresponding phone number string
+        # 2 -> A B C
+        # 3 -> D E F
+        # 4 -> G H I
+        # 5 -> J K L
+        # 6 -> M N O
+        # 7 -> P Q R S
+        # 8 -> T U V
+        # 9 -> W X Y Z
+
+        # hash,
+        # keys = numbers
+                    # values = arrays of letters
+        number_to_letter_hash = {
+            "2": ["A", "B", "C"],
+            "3": ["D", "E", "F"],
+            "4": ["G", "H", "I"],
+            "5": ["J", "K", "L"],
+            "6": ["M", "N", "O"],
+            "7": ["P", "Q", "R", "S"],
+            "8": ["T", "U", "V"],
+            "9": ["W", "X", "Y", "Z"]
+        }
+
+        # hash (aka map)
+        # keys = letters,
+                    # values = numbers
+        letter_to_number_hash = { A: 1,
+            D: 2, G: 3, J: 1, M: 1,
+            P: 1, T: 1, W: 1, B: 1, E: 1,
+            H: 9, K: 1, N: 1, Q: 1, U: 1,
+            X: 1, C: 1, F: 1, I: 1, L: 1,
+            O: 1, R: 1, V: 1, Y: 1, S: 1, Z: 1,}
+        # make a "map" of letters to numbers
+
+        # break it up into characters
+        # 1..string_of_10_chars.length do |char_idx|
+
+        # end
+
+        for char_idx in 0..(string_of_10_chars.length - 1) do
+            # we now have the number between 1 and 10
+            # get the letter in the string at "index" 1-10
+            
+            my_letter = string_of_10_chars[char_idx]
+
+            # uppercase it!
+            my_uppercase_letter = my_letter.upcase
+
+            # # get the associated number
+            # # fetch from a hash in ruby https://launchschool.com/books/ruby/read/hashes#fetch
+            my_number_to_add = letter_to_number_hash.fetch(my_uppercase_letter.to_sym)
+
+            # get the associated number FROM number_to_letter_hash!!!!!
+            # fetch from a hash in ruby https://launchschool.com/books/ruby/read/hashes#fetch
+            # my_number_to_add = number_to_letter_hash.fetch(my_uppercase_letter.to_sym)
+            
+            # add the number we found to the end of the string we're building
+            returned_string_to_build = returned_string_to_build + my_number_to_add.to_s
+            
+        end 
+        
+        return returned_string_to_build
+
+    end
