@@ -6,32 +6,77 @@ def get_humanized_time_ago(time_ago_in_minutes)
   end
 end
 
-# get "/" do
-#     File.read('app/views/index.html')
-# end
 
-# the "/" route
 
 ###################
 #### HOMEPAGE #####
 ###################
 
+# "listen" for a GET request to "/" (homepage)
 get '/' do
-#   render the .erb file in /views named "index.erb"
-  @finstagram_posts = FinstagramPost.order(created_at: :desc)
-
+    # render the .erb file in /views named "index.erb"
+    @finstagram_posts = FinstagramPost.order(created_at: :desc)
     erb(:index)
+end
+
+###################
+#### SIGNUP #####
+###################
+
+get "/signup" do 
+    @user = User.new
+    erb(:signup)
+end
+
+post "/signup" do
+
+  # grab user input values from url params 
+  # e.g. website.com/stuff?email=hi@hi.com&password=secrets
+  my_email      = params[:email]
+  my_avatar_url = params[:avatar_url]
+  my_username_value   = params[:username]
+  my_password   = params[:password]
+
+
+    # instantiate and save a User
+    @user = User.new({ email: my_email, avatar_url: my_avatar_url, username: my_username_value, password: my_password })
+    
+    # (try to) save the user (checks the validation)
+    did_user_save = @user.save
+    if did_user_save
+        # return readable representation of User object
+    "User #{my_username_value} saved!"
+
+    else
+        # go back to the signup page with the new @user
+    erb(:signup)
+    end
+
 
 end
 
-# next code group here https://web-pt.compass.lighthouselabs.ca/activities/35
 
-# listen for a post request
-post "/fizzbuss" do
-    # validate a new user
-    # (sent to us by an HTML form)
-    # save the user if valid
-end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# RUBY EXERCISES
 
 get "/fizzbuzz" do 
     my_string = ""
