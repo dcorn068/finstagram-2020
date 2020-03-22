@@ -45,19 +45,24 @@
     event.preventDefault();
     // look at the event's "baseURI" to find the data
     // e.g.
-    const baseURI = event.baseURI;
+    // const baseURI = event.baseURI;
     console.log(event);
-    console.log({ baseURI });
+    // console.log({ baseURI });
 
     // make a formData object
     // pass in the html form
     const formData = new FormData(signupForm);
+    // you can
+    // https://stackoverflow.com/questions/46640024/how-do-i-post-form-data-with-fetch-api
+    const data = new URLSearchParams(formData);
 
-    // there's a couple ways to send a HTTP request, here's the simplest one
+    // Here's one way to send a HTTP request
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
     fetch("/signup", {
       method: "POST",
       body: formData
+    }).then(response => {
+      signupForm.dispatchEvent(new Event("submit"));
     });
   }
 </script>

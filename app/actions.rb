@@ -8,9 +8,8 @@ end
 
 
 
-###################
-#### HOMEPAGE #####
-###################
+
+#### HOMEPAGE route
 
 # "listen" for a GET request to "/" (homepage)
 get '/' do
@@ -19,17 +18,17 @@ get '/' do
     erb(:index)
 end
 
-###################
-#### SIGNUP #####
-###################
+#### SIGNUP route
 
 get "/signup" do 
+    # make an empty user object
+    # make it an @instance variable to pass it to the view
     @user = User.new
+    # render views/signup.erb
     erb(:signup)
 end
 
 post "/signup" do
-
   # grab user input values from url params 
   # e.g. website.com/stuff?email=hi@hi.com&password=secrets
   my_email      = params[:email]
