@@ -1,27 +1,21 @@
 <form method="post" action="/signup">
-<ul class="errors">
-  <% @user.errors.full_messages.each do |error_message| %>
-    <li><%= error_message %></li>
-  <% end %>
-</ul>  
-
-<div class="form-group">
+  <div class="form-group">
     <!-- label for the input with id="email" -->
     <label for="email">Email</label>
     <!-- input which will send data via params[:email] -->
-    <input type="email" id="email" name="email" value="<%=@user.email %>" />
+    <input type="email" id="email" name="email" />
   </div>
   <div class="form-group">
     <label for="whatsup">Avatar URL</label>
-    <input type="text" id="whatsup" name="avatar_url" value="<%=@user.avatar_url %>" />
+    <input type="text" id="whatsup" name="avatar_url" />
   </div>
   <div class="form-group">
     <label for="username">Username</label>
-    <input type="text" id="username" name="username" value="<%=@user.username%>" />
+    <input type="text" id="username" name="username" />
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" id="password" name="password" value="<%=@user.password %>" />
+    <input type="password" id="password" name="password" />
   </div>
   <div class="form-group">
     <button type="submit">Signup</button>
@@ -29,7 +23,8 @@
 </form>
 
 <script>
-  console.log("HELLOOOOO");
+  // how to send form data using fetch
+  // https://www.youtube.com/watch?time_continue=30&v=c3qWHnJJbSY&feature=emb_title
 
   // grab the signup form
   const signupForm = document.querySelector("form");
@@ -43,26 +38,35 @@
   function handleSubmit(event) {
     // prevent the default action of the event (the submit to server)
     event.preventDefault();
-    // look at the event's "baseURI" to find the data
-    // e.g.
-    // const baseURI = event.baseURI;
-    console.log(event);
-    // console.log({ baseURI });
 
     // make a formData object
     // pass in the html form
     const formData = new FormData(signupForm);
-    // you can
-    // https://stackoverflow.com/questions/46640024/how-do-i-post-form-data-with-fetch-api
-    const data = new URLSearchParams(formData);
 
     // Here's one way to send a HTTP request
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
     fetch("/signup", {
       method: "POST",
-      body: formData
-    }).then(response => {
-      signupForm.dispatchEvent(new Event("submit"));
-    });
+      body: formData,
+      "Content-Type": "multipart/form-data"
+    })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+          return;
+        } else {
+          // parse the response as text
+          response
+            .text()
+            // when it's ready, we'll replace the page with it
+            .then(text => {
+              console.log({ text });
+              document.body.innerHTML = text;
+            });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 </script>
