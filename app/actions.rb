@@ -9,7 +9,7 @@ get '/' do
   erb(:index)
 end
 
-#### SIGNUP route
+###### SIGNUP route
 
 get '/signup' do
   # make an empty user object
