@@ -11,17 +11,7 @@
 </head>
 
 <body>
-	<header>
-		<h1>Finstagram</h1>
 
-		<% if @current_user %> <%= @current_user.username %>
-		<a href="/logout">Logout</a>
-		<% else %>
-		<a href="/login">Login</a>
-		<a href="/signup">Signup</a>
-		<% end %>
-
-	</header>
 
 	<%= yield %>
 </body>

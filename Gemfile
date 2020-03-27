@@ -3,21 +3,21 @@
 # A sample Gemfile
 source 'https://rubygems.org'
 
-gem 'rake'
-gem 'activesupport'
 gem 'activerecord', '~> 4.2.0'
+gem 'activesupport'
+gem 'rake'
 
 gem 'sinatra'
-gem 'sinatra-contrib'
 gem 'sinatra-activerecord'
+gem 'sinatra-contrib'
 
 gem 'puma'
 gem 'tux'
 
 group :development, :test do
-  gem 'rubocop'
   gem 'pry'
-  gem 'solargraph'
+  gem 'rubocop'
   gem 'shotgun'
+  gem 'solargraph'
   gem 'sqlite3', '~> 1.3.6'
 end

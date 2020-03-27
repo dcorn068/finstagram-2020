@@ -1,12 +1,24 @@
 # frozen_string_literal: true
 
+helpers do
+  def current_user
+    User.find_by(id: session[:user_id])
+  end
+
+  def logout
+    session[:user_id] = nil
+  end
+end
+
 #### HOMEPAGE route
 
 # "listen" for a GET request to "/" (homepage)
 get '/' do
-  # render the .erb file in /views named "index.erb"
+  # grab the posts from the database
   @finstagram_posts = FinstagramPost.order(created_at: :desc)
-  erb(:index)
+
+  # render the .erb file in /views named "index.erb"
+  return erb(:index)
 end
 
 ###### SIGNUP route
@@ -16,7 +28,7 @@ get '/signup' do
   # make it an @instance variable to pass it to the view
   @user = User.new
   # render views/signup.erb
-  erb(:signup)
+  return erb(:signup)
 end
 
 post '/signup' do
@@ -38,123 +50,75 @@ post '/signup' do
     redirect to('/')
   else
     # go back to the signup page with the new @user
-    erb(:signup)
+    return erb(:signup)
   end
 end
 
-# RUBY EXERCISES
+###### LOGIN route
 
-get '/fizzbuzz' do
-  my_string = ''
-
-  (1..100).each do |number|
-    # creating named booleans like these
-    # helps to verify that they're working
-    # (you can log the output to check)
-    is_divisible_by_3 = number % 3 == 0
-    is_divisible_by_5 = number % 5 == 0
-
-    my_string = if is_divisible_by_3 && is_divisible_by_5
-                  my_string + 'FizzBuzz <br/>'
-
-                elsif is_divisible_by_5
-                  my_string + 'Buzz <br/>'
-
-                elsif is_divisible_by_3
-                  my_string + 'Fizz <br/>'
-
-                else
-                  my_string + "#{number} <br/>"
-
-                end
-  end
-
-  return my_string
+get '/login' do
+  # show the login form
+  return erb(:login)
 end
 
-get '/yellow' do
-  # Write a method that accepts a 10-character string of letters and outputs a corresponding phone number string. If the input letter string isn't 10 characters, you should return false (indicating that the input is not valid).
+# accept login requests
+post '/login' do
+  # grab the data from the request
+  # (it comes through the url params hash)
+  username = params[:username]
+  password = params[:password]
 
-  # Write a method that accepts a 10-character string of letters
+  # 1. find user by username
+  # pass it into the view using "@"
+  @user = User.find_by(username: username)
 
-  my_old_string = 'hellohello'
-
-  return_string = get_phone_text(my_old_string)
-
-  return return_string
+  # 2. if that user exists
+  # AND if that user's password matches the password input
+  if @user && @user.password == password
+    # save the user id in the server's session
+    session[:user_id] = @user.id
+    # return "Success! User with id #{session[:user_id]} is logged in!"
+    redirect to '/'
+  else
+    @error_message = 'Login failed.'
+    erb(:login)
+  end
 end
 
-# def get_phone_text(string_of_10_chars, arg2, arg3, parameter4)
-# our method only takes one argument
-def get_phone_text(string_of_10_chars)
-  # the output string, starts empty, we'll add to it before returning it
-  returned_string_to_build = ''
+######## LOGOUT route
 
-  # If the input letter string isn't 10 characters in length return false
-  is_string_10_chars_long = string_of_10_chars.length == 10
+get '/logout' do
+  logout
+  redirect to '/'
+end
 
-  return false unless is_string_10_chars_long
+######### POSTS route
 
-  # outputs a corresponding phone number string
-  # 2 -> A B C
-  # 3 -> D E F
-  # 4 -> G H I
-  # 5 -> J K L
-  # 6 -> M N O
-  # 7 -> P Q R S
-  # 8 -> T U V
-  # 9 -> W X Y Z
+# form for creating a new post
+get '/finstagram_posts/new' do
+  redirect to('/login') unless current_user
 
-  # hash,
-  # keys = numbers
-  # values = arrays of letters
-  #   number_to_letter_hash = {
-  #     "2": %w[A B C],
-  #     "3": %w[D E F],
-  #     "4": %w[G H I],
-  #     "5": %w[J K L],
-  #     "6": %w[M N O],
-  #     "7": %w[P Q R S],
-  #     "8": %w[T U V],
-  #     "9": %w[W X Y Z]
-  #   }
+  # create an empty post to clear the error messages
+  @finstagram_post = FinstagramPost.new
+  erb(:"finstagram_posts/new")
+end
 
-  # hash (aka map)
-  # keys = letters,
-  # values = numbers
-  letter_to_number_hash = { A: 1,
-                            D: 2, G: 3, J: 1, M: 1,
-                            P: 1, T: 1, W: 1, B: 1, E: 1,
-                            H: 9, K: 1, N: 1, Q: 1, U: 1,
-                            X: 1, C: 1, F: 1, I: 1, L: 1,
-                            O: 1, R: 1, V: 1, Y: 1, S: 1, Z: 1 }
-  # make a "map" of letters to numbers
+# POST request listener for creating a new post
+post '/finstagram_posts' do
+  photo_url = params[:photo_url]
 
-  # break it up into characters
-  # 1..string_of_10_chars.length do |char_idx|
+  # create a new post
+  @finstagram_post = FinstagramPost.new({ photo_url: photo_url, user_id: current_user.id })
 
-  # end
+  # if it's valid, save it
+  redirect to('/') if @finstagram_post.save
 
-  (0..(string_of_10_chars.length - 1)).each do |char_idx|
-    # we now have the number between 1 and 10
-    # get the letter in the string at "index" 1-10
+  # if it doesn't validate, print error messages
+  return erb(:"finstagram_posts/new")
+end
 
-    my_letter = string_of_10_chars[char_idx]
-
-    # uppercase it!
-    my_uppercase_letter = my_letter.upcase
-
-    # # get the associated number
-    # # fetch from a hash in ruby https://launchschool.com/books/ruby/read/hashes#fetch
-    my_number_to_add = letter_to_number_hash.fetch(my_uppercase_letter.to_sym)
-
-    # get the associated number FROM number_to_letter_hash!!!!!
-    # fetch from a hash in ruby https://launchschool.com/books/ruby/read/hashes#fetch
-    # my_number_to_add = number_to_letter_hash.fetch(my_uppercase_letter.to_sym)
-
-    # add the number we found to the end of the string we're building
-    returned_string_to_build += my_number_to_add.to_s
-  end
-
-  returned_string_to_build
+# get a single post
+get '/finstagram_posts/:id' do
+  @finstagram_post = FinstagramPost.find(params[:id]) # find the finstagram post with the ID from the URL
+  erb(:"finstagram_posts/show") # render app/views/finstagram_posts/show.erb
 end

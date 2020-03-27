@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Document</title>
+</head>
+
+<body>
+	Fetching data…
+	<script>
+		fetch("http://jsonplaceholder.typicode.com")
+        .then(response => response.text())
+        .then(data => console.log(data));
+	</script>
+</body>
+
+</html>
