@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 configure do
   # Log queries to STDOUT in development
-  if Sinatra::Application.development?
-    ActiveRecord::Base.logger = Logger.new(STDOUT)
-  end
+  ActiveRecord::Base.logger = Logger.new(STDOUT) if Sinatra::Application.development?
 
   set :database, {
-    adapter: "sqlite3",
-    database: "db/db.sqlite3"
+    adapter: 'sqlite3',
+    database: 'db/db.sqlite3'
   }
 
   # Load all models from app/models, using autoload instead of require
@@ -15,5 +15,4 @@ configure do
     filename = File.basename(model_file).gsub('.rb', '')
     autoload ActiveSupport::Inflector.camelize(filename), model_file
   end
-
 end
