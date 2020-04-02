@@ -13,11 +13,16 @@ gem 'sinatra-contrib'
 
 gem 'puma'
 gem 'tux'
+gem 'pry'
 
 group :development, :test do
-  gem 'pry'
   gem 'rubocop'
   gem 'shotgun'
   gem 'solargraph'
   gem 'sqlite3', '~> 1.3.6'
+end
+
+group :production do
+  gem 'rails_12factor'
+  gem 'pg'
 end
