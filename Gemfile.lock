@@ -39,6 +39,7 @@ GEM
     parallel (1.19.1)
     parser (2.7.0.5)
       ast (~> 2.4.0)
+    pg (1.2.3)
     pry (0.13.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -49,6 +50,11 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rails_12factor (0.0.3)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.5)
+    rails_stdout_logging (0.0.5)
     rainbow (3.0.0)
     rake (13.0.1)
     reverse_markdown (1.4.0)
@@ -123,8 +129,10 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 4.2.0)
   activesupport
+  pg
   pry
   puma
+  rails_12factor
   rake
   rubocop
   shotgun
