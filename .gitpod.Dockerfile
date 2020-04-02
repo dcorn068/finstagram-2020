@@ -1,3 +1,3 @@
 FROM gitpod/workspace-full
 USER gitpod
-RUN curl https://cli-assets.heroku.com/install.sh | sh
+RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
